@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="#151922"/>
+      <stop offset="100%" stop-color="#07080b"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F7DF88"/>
+      <stop offset="50%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#9A7611"/>
+    </linearGradient>
+    <radialGradient id="turf" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#198746"/>
+      <stop offset="100%" stop-color="#0a4221"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" rx="108" fill="url(#bg)"/>
+  <circle cx="256" cy="256" r="196" fill="none" stroke="url(#gold)" stroke-width="14"/>
+  <circle cx="256" cy="256" r="168" fill="url(#turf)" stroke="url(#gold)" stroke-width="4" stroke-opacity="0.6"/>
+  <!-- Goal frame silhouette -->
+  <path d="M136 226 L136 146 L376 146 L376 226" fill="none" stroke="#ffffff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>
+  <!-- Ball -->
+  <circle cx="256" cy="274" r="68" fill="#ffffff" stroke="#0b0d12" stroke-width="6"/>
+  <polygon points="256,238 286,260 274,296 238,296 226,260" fill="#11151d"/>
+  <path d="M256 238 L256 208 M286 260 L316 248 M274 296 L296 326 M238 296 L216 326 M226 260 L196 248" stroke="#11151d" stroke-width="6" stroke-linecap="round"/>
+  <!-- Gold Crown Accent -->
+  <path d="M206 122 L226 94 L256 114 L286 94 L306 122 Z" fill="url(#gold)"/>
+</svg>
