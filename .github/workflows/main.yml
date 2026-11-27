@@ -1,0 +1,101 @@
+name: Build Penalty Soccer 2026 2027 APK
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-android-apk:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Setup Java JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Prepare web build and Capacitor project
+        run: |
+          if [ -f "package.json" ]; then
+            npm install
+            if grep -q '"build"' package.json; then
+              npm run build
+            fi
+          else
+            mkdir -p www
+            cp -r ./* www/ 2>/dev/null || true
+            rm -rf www/www 2>/dev/null || true
+            npm init -y
+            npm install @capacitor/core @capacitor/cli @capacitor/android
+          fi
+
+          if [ ! -d "android" ]; then
+            WEB_DIR="dist"
+            if [ ! -d "dist" ] && [ -d "build" ]; then
+              WEB_DIR="build"
+            elif [ ! -d "dist" ] && [ -d "www" ]; then
+              WEB_DIR="www"
+            elif [ ! -d "dist" ] && [ -f "index.html" ]; then
+              mkdir -p www
+              cp -r ./* www/ 2>/dev/null || true
+              rm -rf www/www 2>/dev/null || true
+              WEB_DIR="www"
+            fi
+
+            npx cap init "Penalty Soccer 2026 2027" "com.nabraawy.penaltysoccer2026" --web-dir="$WEB_DIR"
+            npx cap add android
+          fi
+
+          npx cap sync android
+
+      - name: Configure Landscape orientation and app name
+        run: |
+          MANIFEST_FILE="android/app/src/main/AndroidManifest.xml"
+          if [ -f "$MANIFEST_FILE" ]; then
+            sed -i 's/android:screenOrientation="[^"]*"//g' "$MANIFEST_FILE"
+            sed -i 's/<activity /<activity android:screenOrientation="landscape" /g' "$MANIFEST_FILE"
+          fi
+
+          STRINGS_FILE="android/app/src/main/res/values/strings.xml"
+          if [ -f "$STRINGS_FILE" ]; then
+            cat << 'EOF' > "$STRINGS_FILE"
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Penalty Soccer 2026 2027</string>
+    <string name="title_activity_main">Penalty Soccer 2026 2027</string>
+    <string name="package_name">com.nabraawy.penaltysoccer2026</string>
+    <string name="custom_url_scheme">com.nabraawy.penaltysoccer2026</string>
+</resources>
+EOF
+          fi
+
+      - name: Grant execute permission to gradlew
+        run: chmod +x android/gradlew
+
+      - name: Build Debug APK
+        working-directory: android
+        run: ./gradlew assembleDebug --stacktrace
+
+      - name: Upload generated APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Penalty-Soccer-2026-2027-Debug-APK
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          
