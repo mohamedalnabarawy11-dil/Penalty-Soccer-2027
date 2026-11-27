@@ -27,9 +27,6 @@ jobs:
           distribution: "temurin"
           java-version: "17"
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
       - name: Prepare web build and Capacitor project
         run: |
           if [ -f "package.json" ]; then
@@ -63,6 +60,11 @@ jobs:
           fi
 
           npx cap sync android
+          if [ -n "$ANDROID_HOME" ]; then
+            echo "sdk.dir=$ANDROID_HOME" > android/local.properties
+          elif [ -n "$ANDROID_SDK_ROOT" ]; then
+            echo "sdk.dir=$ANDROID_SDK_ROOT" > android/local.properties
+          fi
 
       - name: Configure Landscape orientation and app name
         run: |
