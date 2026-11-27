@@ -74,15 +74,7 @@ jobs:
 
           STRINGS_FILE="android/app/src/main/res/values/strings.xml"
           if [ -f "$STRINGS_FILE" ]; then
-            cat << 'EOF' > "$STRINGS_FILE"
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="app_name">Penalty Soccer 2026 2027</string>
-    <string name="title_activity_main">Penalty Soccer 2026 2027</string>
-    <string name="package_name">com.nabraawy.penaltysoccer2026</string>
-    <string name="custom_url_scheme">com.nabraawy.penaltysoccer2026</string>
-</resources>
-EOF
+            printf '<?xml version="1.0" encoding="utf-8"?>\n<resources>\n    <string name="app_name">Penalty Soccer 2026 2027</string>\n    <string name="title_activity_main">Penalty Soccer 2026 2027</string>\n    <string name="package_name">com.nabraawy.penaltysoccer2026</string>\n    <string name="custom_url_scheme">com.nabraawy.penaltysoccer2026</string>\n</resources>\n' > "$STRINGS_FILE"
           fi
 
       - name: Grant execute permission to gradlew
